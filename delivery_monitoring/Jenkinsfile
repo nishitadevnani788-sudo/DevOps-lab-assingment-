@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Check tools') {
+            steps {
+                bat 'python --version'
+                bat 'docker --version'
+            }
+        }
+
+        stage('Validate monitoring files') {
+            steps {
+                bat 'if not exist delivery_metrics.py exit /b 1'
+                bat 'if not exist prometheus.yml exit /b 1'
+                bat 'if not exist alert_rules.yml exit /b 1'
+                bat 'if not exist Dockerfile exit /b 1'
+                bat 'docker build -t delivery-metrics .'
+            }
+        }
+    }
+}
